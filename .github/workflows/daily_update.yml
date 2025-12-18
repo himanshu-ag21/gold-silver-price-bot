@@ -1,0 +1,28 @@
+name: Daily Metal Price Update
+
+on:
+  schedule:
+    - cron: '30 3 * * *' # Runs at 03:30 UTC (approx 9:00 AM IST) daily
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
+          PHONE_NUMBER_ID: ${{ secrets.PHONE_NUMBER_ID }}
+          RECIPIENT_PHONE: ${{ secrets.RECIPIENT_PHONE }}
+        run: python main.py
